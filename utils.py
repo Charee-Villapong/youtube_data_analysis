@@ -114,8 +114,6 @@ def get_previous(df, target=None):
         df[f"{target}_previous_val"] = df[target].shift(1).fillna(0)
         df[f"{target}_diff"] = df[target] - df[f"{target}_previous_val"]
         df.drop(columns=[f"{target}_previous_val"], inplace=True)
-        sorted_columns = ['day'] + sorted([col for col in df.columns if col != 'day'])
-        df = df[sorted_columns]
         return df
 
 def get_rolling_week_sum(df,target=None):
