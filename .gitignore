@@ -1,0 +1,18 @@
+# credentials フォルダ内のファイルを無視
+credentials/
+
+# Python Bytecode Files
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+env/
+
+# IDE/Editor Files
+.vscode/
+.idea/
+
+# System Files
+.DS_Store
+Thumbs.db
