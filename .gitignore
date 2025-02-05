@@ -1,5 +1,5 @@
 # credentials フォルダ内のファイルを無視
-credentials/
+bi_project/credentials/
 
 # Python Bytecode Files
 __pycache__/

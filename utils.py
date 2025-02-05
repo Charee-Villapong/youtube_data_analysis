@@ -18,6 +18,72 @@ import jpholiday
 from credentials.config import client
 
 
+from googleapiclient.discovery import build
+import pandas as pd
+
+
+def YOUTUBE_DATA_API(API_KEY: str, YOUTUBE_API_SERVICE_NAME: str, YOUTUBE_API_VERSION: str, CHANNEL_ID: str):
+    youtube = build(
+        YOUTUBE_API_SERVICE_NAME,
+        YOUTUBE_API_VERSION,
+        developerKey=API_KEY
+    )
+
+    # データを格納するリスト
+    video_data = []
+
+    # Step 1: チャンネルのアップロードプレイリストIDを取得
+    response = youtube.channels().list(part='contentDetails', id=CHANNEL_ID).execute()
+    uploads_playlist_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+
+    # Step 2: プレイリストから動画情報を取得
+    next_page_token = None
+    while True:
+        playlist_response = youtube.playlistItems().list(
+            part='snippet',
+            playlistId=uploads_playlist_id,
+            maxResults=50,  # 1回のリクエストで最大50件取得可能
+            pageToken=next_page_token
+        ).execute()
+
+        # 動画IDリストを作成
+        video_ids = [video['snippet']['resourceId']['videoId'] for video in playlist_response['items']]
+
+        # 各動画の視聴数を取得
+        video_stats_response = youtube.videos().list(
+            part='statistics',
+            id=','.join(video_ids)
+        ).execute()
+
+        # 視聴数を辞書に格納
+        video_stats = {item['id']: item['statistics'].get('viewCount', 0) for item in video_stats_response['items']}
+
+        # 動画情報をリストに追加
+        for video in playlist_response['items']:
+            video_id = video['snippet']['resourceId']['videoId']
+            title = video['snippet']['title']
+            published_at = video['snippet']['publishedAt']
+            description = video['snippet']['description']
+            view_count = int(video_stats.get(video_id, 0))  # 取得できなかった場合は 0
+
+            video_data.append({
+                'Video ID': video_id,
+                'Title': title,
+                'Description': description,
+                'Published Date': published_at,
+                'View Count': view_count
+            })
+
+        # 次のページがある場合は取得
+        next_page_token = playlist_response.get('nextPageToken')
+        if not next_page_token:
+            break
+
+    # Step 3: データをDataFrameに変換
+    df = pd.DataFrame(video_data).sort_values('Published Date', ascending=True)
+    return df
+
+"""
 def YOUTUBE_DATA_API(API_KEY:str, YOUTUBE_API_SERVICE_NAME:str, YOUTUBE_API_VERSION:str, CHANNEL_ID:str):
     youtube = build(
         YOUTUBE_API_SERVICE_NAME,
@@ -58,7 +124,7 @@ def YOUTUBE_DATA_API(API_KEY:str, YOUTUBE_API_SERVICE_NAME:str, YOUTUBE_API_VERS
     # Step 3: データをDataFrameに変換
     df = pd.DataFrame(video_data).sort_values('published_date', ascending=True)
     return df
-
+"""
 
 def YOUTUBE_ANALYTICS_API(SCOPES:str, end_date:str, start_date:str, dimensions, metrics, filters=None, sort=None):
     """
