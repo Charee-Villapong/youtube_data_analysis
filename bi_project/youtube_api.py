@@ -1,4 +1,5 @@
 import os
+import sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
@@ -15,6 +16,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 import jpholiday
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from utils import *
 from credentials.config import *
 
