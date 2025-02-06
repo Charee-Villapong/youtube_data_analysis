@@ -4,11 +4,14 @@ from datetime import datetime
 import numpy as np
 import torch
 import pandas as pd
+from autogluon.tabular import TabularDataset, TabularPredictor
+
 
 """
 作成したい新しいタイトルを入力
 """
-new_title = '【小学生　スプラ配信】今日はぜったいに勝つぞ！'
+new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
+#new_title = '【小学生　スプラ配信】今日こそXPを上げる' 7
 
 _SUFFIX = datetime.today().strftime("%Y%m%d")
 
@@ -38,8 +41,30 @@ similarities = util.pytorch_cos_sim(new_embedding.cpu(), title_embeddings.cpu())
 # 最も類似度の高いインデックスを取得
 best_match_idx = similarities.argmax().item()
 
+top_k = 3
+top_match_indices = similarities.topk(top_k).indices.tolist()
+
 # 類似度の高い動画の閲覧数を予測値とする
 predicted_views = vals[best_match_idx] # type: ignore
 
-print(f"予測閲覧数: {predicted_views}")
+print(f"予測閲覧数(top): {predicted_views}")
+predicted_views_mean = sum(vals[i] for i in top_match_indices) / len(top_match_indices)
+print(f"予測閲覧数(Top3の平均): {predicted_views_mean}")
+
+"""
+Autogluonの推論実施
+"""
+model_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML','autogluon', f'autogluon_{_SUFFIX}')
+predictor = TabularPredictor.load(model_folder) #学習済みモデルのロード
+new_embedding_df = pd.DataFrame(new_embedding.numpy(), 
+                                columns=[f"feature_{i}" for i in range(new_embedding.shape[1])]
+                                )
+new_data = TabularDataset(new_embedding_df)
+pred = predictor.predict(new_data)
+model_names = predictor.get_model_names()
+
+print(f'predictions:{pred}')
+print(f'model_names:{model_names}')
+
+
 

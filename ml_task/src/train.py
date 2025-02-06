@@ -14,6 +14,8 @@ from googleapiclient.discovery import build
 import pandas as pd
 
 from sentence_transformers import SentenceTransformer, util
+from autogluon.tabular import TabularDataset, TabularPredictor
+from sklearn.model_selection import train_test_split
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from utils import *
@@ -100,4 +102,43 @@ if not os.path.exists(output_path):
     df_embeddings.to_pickle(output_path)
 else:
     print(f"ファイル {file_name_pkl} は既に存在します。上書きされませんでした。")
+
+"""
+分析用データの分割
+"""
+y = df_embeddings['View Count']
+X = df_embeddings.drop(['Title','View Count'], axis=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+"""
+Autogluonの学習
+"""
+model_name = f'autogluon_{_SUFFIX}'
+output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
+output_path = os.path.join(output_folder, model_name)
+
+# 出力先フォルダが存在しない場合に作成
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+# モデルがすでに存在する場合は読み込み、存在しない場合は新たに学習して保存
+if not os.path.exists(output_folder):
+    print(f"モデルが存在しません。新しいモデルを学習して保存します: {model_name}")
+    target = 'View Count'
+    train_data = df_embeddings.drop('Title', axis=1)  # 入力データの準備
+    predictor = TabularPredictor(label=target
+                                 ,problem_type='regression'
+                                 ,eval_metric='rmse'
+                                 ,path=output_folder
+                                 ).fit(
+                                     train_data
+                                     ,presets="best_quality"
+                                     ,memory_limit=4096.
+                                     ,num_gpus=2
+                                     ,ag_args_fit={'use_gpu': True}
+                                     )
+    print(f"モデルの学習が完了しました: {model_name}")
+else:
+    print(f"モデルは既に存在しています: {model_name}")
+
 
