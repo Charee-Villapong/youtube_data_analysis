@@ -127,6 +127,7 @@ if not os.path.exists(output_folder):
     target = 'View Count'
     train_data = df_embeddings.drop('Title', axis=1)  # 入力データの準備
     predictor = TabularPredictor(label=target
+                                 ,fit_strategy='sequential'
                                  ,problem_type='regression'
                                  ,eval_metric='rmse'
                                  ,path=output_folder

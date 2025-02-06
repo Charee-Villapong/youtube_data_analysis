@@ -1,7 +1,9 @@
 # credentials フォルダ内のファイルを無視
 bi_project/credentials/
 ml_task/credentials/
-
+ml_task/data/datasets/
+ml_task/models/auto_ML/
+ml_task/models/cos_sim/
 
 # Python Bytecode Files
 __pycache__/
