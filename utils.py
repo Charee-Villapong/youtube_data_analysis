@@ -1,4 +1,5 @@
 import os
+import sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
@@ -15,14 +16,15 @@ from googleapiclient.discovery import build
 import pandas as pd
 import jpholiday
 
-from credentials.config import client
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'bi_project', 'credentials')))
+from config import client
 
 
 from googleapiclient.discovery import build
 import pandas as pd
 
 
-def YOUTUBE_DATA_API(API_KEY: str, YOUTUBE_API_SERVICE_NAME: str, YOUTUBE_API_VERSION: str, CHANNEL_ID: str):
+def YOUTUBE_DATA_API(API_KEY:str, YOUTUBE_API_SERVICE_NAME:str, YOUTUBE_API_VERSION:str, CHANNEL_ID:str):
     youtube = build(
         YOUTUBE_API_SERVICE_NAME,
         YOUTUBE_API_VERSION,
@@ -83,50 +85,7 @@ def YOUTUBE_DATA_API(API_KEY: str, YOUTUBE_API_SERVICE_NAME: str, YOUTUBE_API_VE
     df = pd.DataFrame(video_data).sort_values('Published Date', ascending=True)
     return df
 
-"""
-def YOUTUBE_DATA_API(API_KEY:str, YOUTUBE_API_SERVICE_NAME:str, YOUTUBE_API_VERSION:str, CHANNEL_ID:str):
-    youtube = build(
-        YOUTUBE_API_SERVICE_NAME,
-        YOUTUBE_API_VERSION,
-        developerKey=API_KEY
-    )
-
-    # データを格納するリスト
-    video_data = []
-
-    # Step 1: チャンネルのアップロードプレイリストIDを取得
-    response = youtube.channels().list(part='contentDetails', id=CHANNEL_ID).execute()
-    uploads_playlist_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-
-    # Step 2: プレイリストから動画情報を取得
-    next_page_token = None
-    while True:
-        playlist_response = youtube.playlistItems().list(
-            part='snippet',
-            playlistId=uploads_playlist_id,
-            maxResults=50,  # 1回のリクエストで最大50件取得可能
-            pageToken=next_page_token
-        ).execute()
-
-        # 動画情報をリストに追加
-        for video in playlist_response['items']:
-            video_id = video['snippet']['resourceId']['videoId']
-            title = video['snippet']['title']
-            published_at = video['snippet']['publishedAt']
-            description = video['snippet']['description']
-            video_data.append({'Video ID': video_id, 'Title': title,'Description':description,'published_date':published_at})
-
-        # 次のページがある場合は取得
-        next_page_token = playlist_response.get('nextPageToken')
-        if not next_page_token:
-            break
-
-    # Step 3: データをDataFrameに変換
-    df = pd.DataFrame(video_data).sort_values('published_date', ascending=True)
-    return df
-"""
-
-def YOUTUBE_ANALYTICS_API(SCOPES:str, end_date:str, start_date:str, dimensions, metrics, filters=None, sort=None):
+def YOUTUBE_ANALYTICS_API(SCOPES:str, end_date:str, start_date:str, dimensions:str, metrics:str, filters:str = None, sort:str = None): # type: ignore
     """
     SCOPES:OAuth2認証用のスコープ
     end_date:分析用終了日
@@ -170,7 +129,7 @@ def YOUTUBE_ANALYTICS_API(SCOPES:str, end_date:str, start_date:str, dimensions, 
     df = pd.DataFrame(response['rows'], columns=[col['name'] for col in response['columnHeaders']])
     return df
 
-def get_previous(df, target=None):
+def get_previous(df, target:str=None): # type: ignore
     """
     前日との差分取得関数
     """
@@ -182,7 +141,7 @@ def get_previous(df, target=None):
         df.drop(columns=[f"{target}_previous_val"], inplace=True)
         return df
 
-def get_rolling_week_sum(df,target=None):
+def get_rolling_week_sum(df,target:str=None): # type: ignore
     if target is None:
         return df
     else:
@@ -190,7 +149,7 @@ def get_rolling_week_sum(df,target=None):
         df[f'{target}_week_rolling'].fillna(0, inplace=True)
         return df
 
-def get_dayname(df, target=None):
+def get_dayname(df, target:str=None): # type: ignore
     """
     曜日に対応する番号/曜日(EN)/曜日(JP)列の付与
     """
@@ -211,7 +170,7 @@ def get_dayname(df, target=None):
     return df
 
 
-def get_holiday(df, target=None):
+def get_holiday(df, target:str=None): # type: ignore
     # 日付を変換して、祝日名を取得
     df[target] = pd.to_datetime(df[target], errors="coerce")
     df["holiday_name"] = df[target].apply(jpholiday.is_holiday_name)
@@ -221,17 +180,15 @@ def get_holiday(df, target=None):
     df["holiday_name"].notna() | df[target].dt.weekday.isin([5, 6]), "holiday", "")
     return df
 
-
 # Google Sheets API認証
-def authenticate_google_sheets(credentials_file):
+def authenticate_google_sheets(credentials_file:str):
     # サービスアカウントの認証情報をロード
     creds = Credentials.from_service_account_file(
         credentials_file, scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
     return creds
 
-
-def write_dataframe_to_sheet(df, spreadsheet_id, sheet_name, credentials_file):
+def write_dataframe_to_sheet(df, spreadsheet_id:str, sheet_name:str, credentials_file:str): # type: ignore
     # 認証
     creds = authenticate_google_sheets(credentials_file)
 
