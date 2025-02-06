@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
 
 from googleapiclient.discovery import build
 import pandas as pd
