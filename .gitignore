@@ -1,5 +1,7 @@
 # credentials フォルダ内のファイルを無視
 bi_project/credentials/
+ml_task/credentials/
+
 
 # Python Bytecode Files
 __pycache__/
