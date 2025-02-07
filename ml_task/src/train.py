@@ -180,7 +180,9 @@ new_data = TabularDataset(new_embedding_df)
 
 pred = predictor.predict(new_data) # type: ignore
 model_names = predictor.model_names() # type: ignore
-pred_multi = predictor.predict_multi(new_data)
+pred_multi = predictor.predict_multi(new_data,as_pandas=True)
+leaderboard = predictor.leaderboard()
+
 
 print(f'predictions:{pred}')
 print(f'model_names:{model_names}')
