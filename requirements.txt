@@ -9,7 +9,6 @@ alembic==1.14.1
 annotated-types==0.7.0
 antlr4-python3-runtime==4.9.3
 appdirs==1.4.4
-async-timeout==5.0.1
 attrs==25.1.0
 autogluon==1.2
 autogluon.common==1.2
@@ -25,7 +24,7 @@ botocore==1.36.14
 cachetools==5.5.1
 catalogue==2.0.10
 catboost==1.2.7
-certifi==2024.12.14
+certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
 cloudpathlib==0.20.0
@@ -34,7 +33,7 @@ colorama==0.4.6
 colorful==0.5.6
 colorlog==6.9.0
 confection==0.1.5
-contourpy==1.3.0
+contourpy==1.3.1
 coreforecast==0.0.12
 cycler==0.12.1
 cymem==2.0.11
@@ -57,8 +56,8 @@ fugue==0.9.1
 future==1.0.0
 gdown==5.2.0
 gluonts==0.16.0
-google-api-core==2.24.0
-google-api-python-client==2.159.0
+google-api-core==2.24.1
+google-api-python-client==2.160.0
 google-auth==2.38.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
@@ -72,15 +71,13 @@ huggingface-hub==0.28.1
 hyperopt==0.2.7
 idna==3.10
 imageio==2.37.0
-importlib_metadata==8.6.1
-importlib_resources==6.5.2
 Jinja2==3.1.5
 jmespath==1.0.1
 joblib==1.4.2
 jpholiday==0.1.10
 jsonschema==4.21.1
 jsonschema-specifications==2024.10.1
-kiwisolver==1.4.7
+kiwisolver==1.4.8
 langcodes==3.5.0
 language_data==1.3.0
 lazy_loader==0.4
@@ -88,13 +85,13 @@ lightgbm==4.5.0
 lightning==2.5.0.post0
 lightning-utilities==0.12.0
 linkify-it-py==2.0.3
-llvmlite==0.43.0
+llvmlite==0.44.0
 Mako==1.3.9
 marisa-trie==1.2.1
 Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
-matplotlib==3.9.4
+matplotlib==3.10.0
 mdit-py-plugins==0.4.2
 mdurl==0.1.2
 memray==1.15.0
@@ -106,10 +103,10 @@ multidict==6.1.0
 multiprocess==0.70.16
 murmurhash==1.0.12
 narwhals==1.25.2
-networkx==3.2.1
+networkx==3.4.2
 nlpaug==1.1.11
 nltk==3.8.1
-numba==0.60.0
+numba==0.61.0
 numpy==1.26.4
 nvidia-ml-py3==7.352.0
 oauthlib==3.2.2
@@ -132,7 +129,7 @@ plotly==6.0.0
 preshed==3.0.9
 prometheus_client==0.21.1
 propcache==0.2.1
-proto-plus==1.25.0
+proto-plus==1.26.0
 protobuf==5.29.3
 psutil==6.1.1
 py-spy==0.4.0
@@ -150,7 +147,7 @@ pytesseract==0.3.10
 python-dateutil==2.9.0.post0
 pytorch-lightning==2.5.0.post0
 pytorch-metric-learning==2.3.0
-pytz==2024.2
+pytz==2025.1
 PyYAML==6.0.2
 ray==2.39.0
 referencing==0.36.2
@@ -164,7 +161,7 @@ s3transfer==0.11.2
 safetensors==0.5.2
 scikit-image==0.24.0
 scikit-learn==1.5.2
-scipy==1.13.1
+scipy==1.15.1
 sentence-transformers==3.4.1
 sentencepiece==0.2.0
 seqeval==1.2.2
@@ -188,7 +185,7 @@ text-unidecode==1.3
 textual==1.0.0
 thinc==8.2.5
 threadpoolctl==3.5.0
-tifffile==2024.8.30
+tifffile==2025.1.10
 timm==1.0.3
 tokenizers==0.21.0
 toolz==0.12.1
@@ -204,7 +201,7 @@ typing_extensions==4.12.2
 tzdata==2025.1
 uc-micro-py==1.0.3
 uritemplate==4.1.1
-urllib3==1.26.20
+urllib3==2.3.0
 utilsforecast==0.2.4
 virtualenv==20.29.1
 wasabi==1.1.3
@@ -215,4 +212,3 @@ wrapt==1.17.2
 xgboost==2.1.3
 xxhash==3.5.0
 yarl==1.18.3
-zipp==3.21.0
