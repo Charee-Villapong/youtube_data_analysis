@@ -3,9 +3,9 @@
 run:
 	python ml_task/src/train.py
 	python ml_task/src/prediction.py
-training:
+train:
 	python ml_task/src/train.py
-prediction:
+pred:
 	python ml_task/src/prediction.py
 bi:
 	python bi_project/youtube_api.py
