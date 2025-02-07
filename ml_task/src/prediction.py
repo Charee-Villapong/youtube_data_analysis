@@ -73,6 +73,10 @@ new_data = TabularDataset(new_embedding_df)
 
 pred = predictor.predict(new_data)
 model_names = predictor.model_names() 
+pred_multi = predictor.predict_multi(new_data,as_pandas=True) #すべての予測値 pd.DataFrame形式
+leaderboard = predictor.leaderboard()
 
 print(f'predictions:{pred}')
 print(f'model_names:{model_names}')
+print(leaderboard)
+print(pred_multi)
