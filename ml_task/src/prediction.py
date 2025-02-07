@@ -1,22 +1,26 @@
 import os
+import sys
+
 from sentence_transformers import SentenceTransformer, util
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 import torch
 import pandas as pd
 from autogluon.tabular import TabularDataset, TabularPredictor
 
 
+print(f'{"*"*10}prediction started{"*"*10}')
 """
 作成したい新しいタイトルを入力
 """
 new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
-#new_title = '【小学生　スプラ配信】今日こそXPを上げる' 7
+#new_title = '【小学生　スプラ配信】今日こそXPを上げる' 
 
 _SUFFIX = datetime.today().strftime("%Y%m%d")
+#_SUFFIX = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
 
 """
-モデルの読み込み
+分散表現のコサイン類似度を算出
 """
 model_name = f'STF_{_SUFFIX}'
 input_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'cos_sim', f'cos_sim_{_SUFFIX}')
@@ -52,19 +56,22 @@ predicted_views_mean = sum(vals[i] for i in top_match_indices) / len(top_match_i
 print(f"予測閲覧数(Top3の平均): {predicted_views_mean}")
 
 """
-Autogluonの推論実施
+autoML : Autogluonの推論実施
 """
-model_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML','autogluon', f'autogluon_{_SUFFIX}')
+
+model_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML','autogluon', f'autogluon_{_SUFFIX}','ds_sub_fit','sub_fit_ho')
 predictor = TabularPredictor.load(model_folder) #学習済みモデルのロード
-new_embedding_df = pd.DataFrame(new_embedding.numpy(), 
-                                columns=[f"feature_{i}" for i in range(new_embedding.shape[1])]
-                                )
+
+new_embeddings_np = new_embedding.cpu().numpy()
+embeddings_list = [embedding.tolist() for embedding in new_embeddings_np]
+
+new_embedding_df = pd.DataFrame(embeddings_list)
 new_data = TabularDataset(new_embedding_df)
+
 pred = predictor.predict(new_data)
+"""
 model_names = predictor.get_model_names()
 
 print(f'predictions:{pred}')
 print(f'model_names:{model_names}')
-
-
-
+"""
