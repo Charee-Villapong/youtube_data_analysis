@@ -25,6 +25,7 @@ from config import *
 import warnings
 warnings.filterwarnings('ignore')
 
+
 _SUFFIX = datetime.today().strftime("%Y%m%d")
 
 def youtube_api(API_KEY, CHANNEL_ID):
@@ -149,4 +150,5 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 if __name__ == "__main__":
     df = youtube_api(API_KEY, CHANNEL_ID)
     autogluon_train(df, mode="test")
-    st_train(df, _SUFFIX)
+
+
