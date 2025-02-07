@@ -116,51 +116,54 @@ Autogluonの学習
 """
 print(f"GPU COUNT : {torch.cuda.device_count()}")  # 0 なら AutoGluon から GPU が見えてない
 
-model_name = f'autogluon_{_SUFFIX}'
-output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
-output_path = os.path.join(output_folder, model_name)
-ag_test_params =  {
-    "presets": "fastest_train",  # 学習を高速化
-    "time_limit": 300,  # 5分以内で学習終了
-    "num_bag_folds": 0,  # バギングなし
-    "num_stack_levels": 0,  # スタッキングなし
-    "excluded_model_types": ["KNN", "RF", "XT", "NN_TORCH", "CAT"],  # 除外するモデル
-    "ag_args_fit": {"use_gpu": True}  # GPU を使用
-}
+def autoglon_train(mode:str='train'):
+    model_name = f'autogluon_{_SUFFIX}'
+    output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
+    output_path = os.path.join(output_folder, model_name)
+    ag_test_params =  {
+        "presets": "fastest_train",  # 学習を高速化
+        "time_limit": 300,  # 5分以内で学習終了
+        "num_bag_folds": 0,  # バギングなし
+        "num_stack_levels": 0,  # スタッキングなし
+        "excluded_model_types": ["KNN", "RF", "XT", "NN_TORCH", "CAT"],  # 除外するモデル
+        "ag_args_fit": {"use_gpu": True}  # GPU を使用
+    }
+    ag_params =  {
+        "presets": "best_quality",
+        "fit_strategy": "sequential",
+        "memory_limit": 2048,
+        "ag_args_fit": {"use_gpu": True},
+    }
+    # フォルダが存在しない場合は作成
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print('対象のフォルダを作成します')
 
-ag_params =  {
-    "presets": "best_quality",
-    "fit_strategy": "sequential",
-    "memory_limit": 2048,
-    "ag_args_fit": {"use_gpu": True},
-}
+    # フォルダが空の場合（モデルがない場合）は学習する
+    if not os.listdir(output_folder):
+        print(f"モデルが存在しません。新しいモデルを学習して保存します: {output_folder}")
 
+        target = 'View Count'
+        train_data = df_embeddings.drop('Title', axis=1)  # 入力データの準備
+    if mode in ['train', 'test']:
+        params = ag_test_params if mode == 'train' else ag_params  # モードに応じてパラメータを選択
 
-# フォルダが存在しない場合は作成
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-    print('対象のフォルダを作成します')
+        predictor = TabularPredictor(
+            label=target,
+            problem_type='regression',
+            eval_metric='rmse',
+            path=output_folder
+        ).fit(
+            train_data,
+            **params  # ここでパラメータを適用
+        )
 
-# フォルダが空の場合（モデルがない場合）は学習する
-if not os.listdir(output_folder):
-    print(f"モデルが存在しません。新しいモデルを学習して保存します: {output_folder}")
-    
-    target = 'View Count'
-    train_data = df_embeddings.drop('Title', axis=1)  # 入力データの準備
+        print(f"モデルの学習が完了しました: {model_name}")
 
-    predictor = TabularPredictor(
-        label=target,
-        problem_type='regression',
-        eval_metric='rmse',
-        path=output_folder
-    ).fit(
-        train_data,
-        **ag_params
-    )
+    else:
+        print(f"モデルは既に存在しています: {model_name}")
 
-    print(f"モデルの学習が完了しました: {model_name}")
-else:
-    print(f"モデルは既に存在しています: {model_name}")
+autoglon_train(mode='test')
 
 """
 エラー原因を突き止めるために推論も実装
