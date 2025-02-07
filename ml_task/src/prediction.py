@@ -10,10 +10,11 @@ from autogluon.tabular import TabularDataset, TabularPredictor
 
 
 print(f'{"*"*10}prediction started{"*"*10}')
+
 """
 作成したい新しいタイトルを入力
 """
-new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
+new_title = '【小学生　スプラ配信】今日こそXマッチで活躍するぜ！'
 #new_title = '【小学生　スプラ配信】今日こそXPを上げる' 
 
 _SUFFIX = datetime.today().strftime("%Y%m%d")
@@ -61,17 +62,17 @@ autoML : Autogluonの推論実施(エラー起きたらOK:削除する)
 model_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML','autogluon', f'autogluon_{_SUFFIX}','ds_sub_fit','sub_fit_ho')
 predictor = TabularPredictor.load(model_folder) #学習済みモデルのロード
 
+"""
 new_embeddings_np = new_embedding.cpu().numpy()
 embeddings_list = [embedding.tolist() for embedding in new_embeddings_np]
-
 new_embedding_df = pd.DataFrame(embeddings_list)
+"""
+new_embedding = model.encode(new_title, convert_to_tensor=True)
+new_embedding_df = pd.DataFrame(new_embedding.cpu().numpy().reshape(1, -1), columns=[f"{i}" for i in range(new_embedding.shape[0])])
 new_data = TabularDataset(new_embedding_df)
 
 pred = predictor.predict(new_data)
-
-"""
-model_names = predictor.get_model_names()
+model_names = predictor.model_names() 
 
 print(f'predictions:{pred}')
 print(f'model_names:{model_names}')
-"""
