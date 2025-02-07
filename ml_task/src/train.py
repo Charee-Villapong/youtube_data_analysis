@@ -159,11 +159,13 @@ def autoglon_train(mode:str='train'):
         )
 
         print(f"モデルの学習が完了しました: {model_name}")
+        
+        return predictor
 
     else:
         print(f"モデルは既に存在しています: {model_name}")
 
-autoglon_train(mode='test')
+predictor = autoglon_train(mode='test')
 
 """
 エラー原因を突き止めるために推論も実装
