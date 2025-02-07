@@ -13,8 +13,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
+print(f'{"*"*10}prediction started{"*"*10}')
 
+new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
 
 _SUFFIX = datetime.today().strftime("%Y%m%d")
 
@@ -66,10 +67,6 @@ def get_cos_sim(new_title:str,_SUFFIX:str):
     print(f"予測閲覧数(Top3の平均): {predicted_views_mean}")
     return predicted_views, predicted_views_mean
 
-
-"""
-main execution
-"""
 if __name__ == "__main__":
     get_cos_sim(new_title, _SUFFIX)
     autogluon_pred(new_title, _SUFFIX)
