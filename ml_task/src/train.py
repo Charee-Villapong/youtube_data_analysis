@@ -65,7 +65,8 @@ def autogluon_train(df, mode:str="train"):
     if not os.listdir(output_folder):
         print(f"モデルが存在しません。新しいモデルを学習して保存します: {output_folder}")
         target = 'View Count'
-
+    if mode not in {'train', 'test'}:
+         raise ValueError("引数modeにはtrainかtestを必ず入力してください")
     if mode == 'train':
             predictor = TextPredictor(problem_type='regression',label=target, eval_metric='root_mean_squared_error',verbosity=1)
             predictor.fit(df
@@ -82,7 +83,7 @@ def autogluon_train(df, mode:str="train"):
                         ,num_gpus=2
                         ,holdout_frac=0.2
                         )
-    print(f"モデルの学習が完了しました: {model_name}")
+    print(f"モデルの学習プロセスが完了しました: {model_name}")
 
 
 """
@@ -148,5 +149,5 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 if __name__ == "__main__":
     df = youtube_api(API_KEY, CHANNEL_ID)
-    autogluon_train(df, mode="test")
+    autogluon_train(df, mode="train")
     st_train(df, _SUFFIX)
