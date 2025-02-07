@@ -16,7 +16,6 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
 from autogluon.tabular import TabularDataset, TabularPredictor
-import torch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../credentials')))
@@ -114,9 +113,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 """
 Autogluonの学習
 """
-print(f"GPU COUNT : {torch.cuda.device_count()}")  # 0 なら AutoGluon から GPU が見えてない
 
 def autoglon_train(mode:str='train'):
+    """
+    mode = 'test' 軽量での実行/実行時間短縮用
+    mode = 'train' 本番実行用
+    """
     model_name = f'autogluon_{_SUFFIX}'
     output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
     output_path = os.path.join(output_folder, model_name)
@@ -145,27 +147,26 @@ def autoglon_train(mode:str='train'):
 
         target = 'View Count'
         train_data = df_embeddings.drop('Title', axis=1)  # 入力データの準備
-    if mode in ['train', 'test']:
-        params = ag_test_params if mode == 'train' else ag_params  # モードに応じてパラメータを選択
+        if mode in ['train', 'test']:
+            params = ag_test_params if mode == 'train' else ag_params  # モードに応じてパラメータを選択
 
-        predictor = TabularPredictor(
-            label=target,
-            problem_type='regression',
-            eval_metric='rmse',
-            path=output_folder
-        ).fit(
-            train_data,
-            **params  # ここでパラメータを適用
-        )
+            predictor = TabularPredictor(
+                label=target,
+                problem_type='regression',
+                eval_metric='rmse',
+                path=output_folder
+            ).fit(
+                train_data,
+                **params  # ここでパラメータを適用
+            )
 
-        print(f"モデルの学習が完了しました: {model_name}")
-        
-        return predictor
-
+            print(f"モデルの学習が完了しました: {model_name}")
+            return predictor
     else:
         print(f"モデルは既に存在しています: {model_name}")
 
-predictor = autoglon_train(mode='test')
+path = 'ml_task/models/auto_ML/autogluon/autogluon_20250207/ds_sub_fit/sub_fit_ho'
+predictor = TabularPredictor.load(path)
 
 """
 エラー原因を突き止めるために推論も実装
@@ -177,8 +178,10 @@ new_embedding = model.encode(new_title, convert_to_tensor=True)
 new_embedding_df = pd.DataFrame(new_embedding.cpu().numpy().reshape(1, -1), columns=[f"{i}" for i in range(new_embedding.shape[0])])
 new_data = TabularDataset(new_embedding_df)
 
-pred = predictor.predict(new_data)
-model_names = predictor.get_model_names()
+pred = predictor.predict(new_data) # type: ignore
+model_names = predictor.model_names() # type: ignore
+pred_multi = predictor.predict_multi(new_data)
 
 print(f'predictions:{pred}')
 print(f'model_names:{model_names}')
+print(f'model_multi:{pred_multi}')
