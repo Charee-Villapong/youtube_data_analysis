@@ -56,9 +56,8 @@ predicted_views_mean = sum(vals[i] for i in top_match_indices) / len(top_match_i
 print(f"予測閲覧数(Top3の平均): {predicted_views_mean}")
 
 """
-autoML : Autogluonの推論実施
+autoML : Autogluonの推論実施(エラー起きたらOK:削除する)
 """
-
 model_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML','autogluon', f'autogluon_{_SUFFIX}','ds_sub_fit','sub_fit_ho')
 predictor = TabularPredictor.load(model_folder) #学習済みモデルのロード
 
@@ -69,6 +68,7 @@ new_embedding_df = pd.DataFrame(embeddings_list)
 new_data = TabularDataset(new_embedding_df)
 
 pred = predictor.predict(new_data)
+
 """
 model_names = predictor.get_model_names()
 

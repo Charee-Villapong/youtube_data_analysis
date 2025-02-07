@@ -131,8 +131,8 @@ ag_test_params =  {
 ag_params =  {
     "presets": "best_quality",
     "fit_strategy": "sequential",
-    # "memory_limit": 4096,
-    "ag_args_fit": {"use_gpu": True, "num_gpus": 0},
+    "memory_limit": 2048,
+    "ag_args_fit": {"use_gpu": True},
 }
 
 
@@ -155,10 +155,7 @@ if not os.listdir(output_folder):
         path=output_folder
     ).fit(
         train_data,
-        presets="best_quality",
-        fit_strategy='sequential',
-        #memory_limit=4096,
-        ag_args_fit={'use_gpu': True, 'num_gpus': 0}
+        **ag_params
     )
 
     print(f"モデルの学習が完了しました: {model_name}")
