@@ -12,12 +12,6 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-
-new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
-
-
-_SUFFIX = datetime.today().strftime("%Y%m%d")
-
 def autogluon_pred(new_title:str,_SUFFIX:str):
     """
     autoML : Autogluonの推論実施
@@ -71,5 +65,7 @@ def get_cos_sim(new_title:str,_SUFFIX:str):
 main execution
 """
 if __name__ == "__main__":
+    new_title = '【小学生　スプラ配信】今日こそXパワーを上げる'
+    _SUFFIX = datetime.today().strftime("%Y%m%d")
     get_cos_sim(new_title, _SUFFIX)
     autogluon_pred(new_title, _SUFFIX)
