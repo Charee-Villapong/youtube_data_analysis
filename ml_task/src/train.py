@@ -66,7 +66,7 @@ def autogluon_train(df, mode:str="train"):
     # フォルダが空の場合（モデルがない場合）は学習する
     if not os.listdir(output_folder):
         print(f"モデルが存在しません。新しいモデルを学習して保存します: {output_folder}")
-    if mode not in {'train', 'test'}:
+    if mode not in {'train', 'test', 'staging'}:
          raise ValueError("引数modeにはtrainかtestを必ず入力してください")
     if mode == 'train':
             predictor = TextPredictor(problem_type='regression',label=target, eval_metric='root_mean_squared_error',verbosity=1)
