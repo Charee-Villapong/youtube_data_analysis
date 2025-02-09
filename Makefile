@@ -13,3 +13,6 @@ all:
 	python bi_project/youtube_api.py
 	python ml_task/src/train.py
 	python ml_task/src/prediction.py
+
+web:
+	streamlit run /Users/yoshitakanishikawa/Downloads/youtube/app/src/youtube_predictor.py
