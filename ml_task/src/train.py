@@ -57,6 +57,7 @@ def autogluon_train(df, mode:str="train"):
     model_name = f'autogluon_{_SUFFIX}'
     output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
     output_path = os.path.join(output_folder, model_name)
+    target = 'View Count'
     # フォルダが存在しない場合は作成
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -65,7 +66,6 @@ def autogluon_train(df, mode:str="train"):
     # フォルダが空の場合（モデルがない場合）は学習する
     if not os.listdir(output_folder):
         print(f"モデルが存在しません。新しいモデルを学習して保存します: {output_folder}")
-        target = 'View Count'
     if mode not in {'train', 'test'}:
          raise ValueError("引数modeにはtrainかtestを必ず入力してください")
     if mode == 'train':
@@ -76,11 +76,19 @@ def autogluon_train(df, mode:str="train"):
                         ,num_gpus=2
                         ,holdout_frac=0.2
                         )
-    if mode == 'test':
+    if mode == 'staging':
             predictor = TextPredictor(problem_type='regression',label=target, eval_metric='root_mean_squared_error',verbosity=1)
             predictor.fit(df
                         ,save_path=output_folder
                         ,presets='medium_quality_faster_train'
+                        ,num_gpus=2
+                        ,holdout_frac=0.2
+                        )
+    if mode == 'test':
+            predictor = TextPredictor(problem_type='regression',label=target, eval_metric='root_mean_squared_error',verbosity=1)
+            predictor.fit(df
+                        ,save_path=output_folder
+                        ,presets='lower_quality_fast_train'
                         ,num_gpus=2
                         ,holdout_frac=0.2
                         )
@@ -143,5 +151,5 @@ def st_train(df,_SUFFIX):
 
 if __name__ == "__main__":
     df = youtube_api(API_KEY, CHANNEL_ID)
-    autogluon_train(df, mode="train")
+    autogluon_train(df, mode="staging")
     st_train(df, _SUFFIX)
