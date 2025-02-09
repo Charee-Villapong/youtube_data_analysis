@@ -60,7 +60,6 @@ def get_cos_sim(new_title:str,_SUFFIX:str):
     print(f"予測閲覧数(Top3の平均): {predicted_views_mean}")
     return predicted_views, predicted_views_mean
 
-
 """
 main execution
 """

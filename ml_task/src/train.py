@@ -49,10 +49,11 @@ def youtube_api(API_KEY, CHANNEL_ID):
         print(f"ファイル {output_filename} は既に存在します。上書きされませんでした。")
         return df
 
-"""
-Autogluonの学習
-"""
+
 def autogluon_train(df, mode:str="train"):
+    """
+    Autogluonの学習
+    """
     model_name = f'autogluon_{_SUFFIX}'
     output_folder = os.path.join('..', 'YOUTUBE', 'ml_task', 'models', 'auto_ML', 'autogluon', f'autogluon_{_SUFFIX}')
     output_path = os.path.join(output_folder, model_name)
@@ -139,13 +140,6 @@ def st_train(df,_SUFFIX):
         df_embeddings.to_pickle(output_path)
     else:
         print(f"ファイル {file_name_pkl} は既に存在します。上書きされませんでした。")
-
-"""
-#分析用データの分割
-y = df_embeddings['View Count']
-X = df_embeddings.drop(['Title','View Count'], axis=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-"""
 
 if __name__ == "__main__":
     df = youtube_api(API_KEY, CHANNEL_ID)

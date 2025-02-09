@@ -9,14 +9,17 @@ import pandas as pd
 from autogluon.text import TextPredictor
 import warnings
 
+#streamlit run /Users/yoshitakanishikawa/Downloads/youtube/app/src/youtube_predictor.py
+
 warnings.filterwarnings('ignore')
 
-def autogluon_pred(new_title:str,_SUFFIX:str):
+def autogluon_pred(new_title:str,_SUFFIX:str) -> float:
     """
     autoML : Autogluonの推論実施
     """
     path = f'ml_task/models/auto_ML/autogluon/autogluon_{_SUFFIX}'
     predictor = TextPredictor.load(path)
+
 
     pred = predictor.predict({'Title': [new_title]}, as_pandas=False)
     print(pred)
@@ -66,12 +69,10 @@ def main():
 
     # ユーザー入力
     new_title = st.text_input("動画のタイトルを入力してください：")
-    st.sidebar.title("sidebar title")
 
     if st.button("予測する"):
         if new_title:
-            _SUFFIX = "20250207"
-            #_SUFFIX = datetime.today().strftime("%Y%m%d")
+            _SUFFIX = datetime.today().strftime("%Y%m%d")
 
             # コサイン類似度による予測
             predicted_views, predicted_views_mean = get_cos_sim(new_title, _SUFFIX)
@@ -81,9 +82,13 @@ def main():
 
             # 結果の表示
             st.subheader("予測結果")
+            st.write(f"AutoGluonというAutoMLによる予測: {autogluon_result} 回")
             st.write(f"コサイン類似度というアルゴリズムから算出(top1)）: {predicted_views} 回")
             st.write(f"コサイン類似度というアルゴリズムから算出（Top3の平均値）: {predicted_views_mean} 回")
-            st.write(f"AutoGluonというAutoMLによる予測: {autogluon_result} 回")
+            result = (autogluon_result + predicted_views + predicted_views_mean) / 3
+
+            st.write(f"三つのアルゴリズムの平均値: {result} 回")
+
         else:
             st.warning("タイトルを入力してください。")
 
