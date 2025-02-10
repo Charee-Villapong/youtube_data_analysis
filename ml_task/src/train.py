@@ -18,8 +18,8 @@ from sentence_transformers import SentenceTransformer, util
 from autogluon.text import TextPredictor 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../credentials')))
 from utils import *
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../credentials')))
 from config import *
 
 import warnings
