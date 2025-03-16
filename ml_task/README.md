@@ -15,7 +15,7 @@ PC が開いている状態であれば、**毎朝 9 時に自動で学習プロ
 | `make pred` | 推論処理を実行する |
 | `make run` | 学習と推論処理を実行する |
 | `make web` | `streamlit` を通してローカルで WEB アプリケーションを立ち上げる |
-| `make all` | `bi`・`train`・`pred` をすべて実行する |
+| `make all` | `bi`・`train`・`web` をすべて実行する |
 
 ---
 
