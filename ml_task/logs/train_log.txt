@@ -1,0 +1,16 @@
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.
+make: getcwd: Operation not permitted
+make: *** No rule to make target `train'.  Stop.

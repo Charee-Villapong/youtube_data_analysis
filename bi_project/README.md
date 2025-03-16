@@ -27,7 +27,7 @@
 このレポートは、ビジネスインテリジェンス (BI) のデータ分析結果を示しています。以下のリンクからレポートにアクセスできます。
 
 ## レポートリンク
-[BI REPORT - Looker Studio](https://lookerstudio.google.com/s/kN2jpzyFcRc)
+[BI REPORT - Looker Studio](https://lookerstudio.google.com/s/kN2jpzyFcRc)x
 
 ## 概要
 
