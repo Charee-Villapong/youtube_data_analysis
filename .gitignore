@@ -20,3 +20,13 @@ env/
 # System Files
 .DS_Store
 Thumbs.db
+# 標準セット（秘匿情報の混入防止）
+.env*
+!.env.example
+config.local.*
+*.local.*
+secrets/
+*.pem
+*.key
+id_rsa*
+id_ed25519*
